@@ -3,73 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Chatbot</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0;
-            padding: 0;
-        }
-        #chat {
-            width: 80%;
-            max-width: 600px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
-            overflow-y: auto;
-            height: 300px;
-            background-color: #f9f9f9;
-        }
-        #inputArea {
-            display: flex;
-            width: 80%;
-            max-width: 600px;
-            margin-top: 10px;
-        }
-        #inputField {
-            flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        #sendButton {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-        }
-        #sendButton:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <title>Study Chatbot - To-Do List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Chat with Study Chatbot</h1>
-    <div id="chat">
-        <!-- Messages will be displayed here -->
-    </div>
-    <div id="inputArea">
-        <input type="text" id="inputField" placeholder="Type your message here..." />
-        <button id="sendButton">Send</button>
-    </div>
-    <script>
-        const chat = document.getElementById('chat');
-        const inputField = document.getElementById('inputField');
-        const sendButton = document.getElementById('sendButton');
+    <div class="container">
+        <h1>📝 Study Chatbot - To-Do List</h1>
+        
+        <div class="input-section">
+            <form id="taskForm" method="POST" action="/add">
+                <input 
+                    type="text" 
+                    id="taskInput" 
+                    name="task" 
+                    placeholder="Add a new task (e.g., Make tea)" 
+                    required
+                >
+                <button type="submit">Add Task</button>
+            </form>
+        </div>
 
-        sendButton.addEventListener('click', () => {
-            const message = inputField.value;
-            if (message.trim() !== '') {
-                // Display message in chat
-                chat.innerHTML += `<div>${message}</div>`;
-                inputField.value = '';
-            }
-        });
-    </script>
+        <div class="tasks-section">
+            <h2>Your Tasks:</h2>
+            <ul id="taskList" class="task-list">
+                {% for task in tasks %}
+                <li class="task-item">
+                    <span class="task-text">{{ task.task }}</span>
+                    <form method="POST" action="/delete/{{ loop.index0 }}" style="display:inline;">
+                        <button type="submit" class="delete-btn">Delete</button>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
