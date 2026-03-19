@@ -1,25 +1,16 @@
-// Function to send a message to the server
-function sendMessage(message) {
-    fetch('/api/sendMessage', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ message })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Message sent:', data);
-    })
-    .catch((error) => {
-        console.error('Error sending message:', error);
-    });
-}
+// This file handles client-side interactions
+// The form submission is handled by HTML form action
 
-// Function to display received messages in the UI
-function displayMessage(message) {
-    const chatUI = document.getElementById('chat');
-    const messageElement = document.createElement('div');
-    messageElement.textContent = message;
-    chatUI.appendChild(messageElement);
-}
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('✅ Script loaded successfully!');
+    console.log('Tasks will be saved to the server when you submit the form.');
+});
+
+// Optional: Add confirmation before delete
+document.querySelectorAll('form[action*="/delete/"]').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        if (!confirm('Are you sure you want to delete this task?')) {
+            e.preventDefault();
+        }
+    });
+});
