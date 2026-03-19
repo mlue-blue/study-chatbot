@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+        #chat {
+            width: 80%;
+            max-width: 600px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            overflow-y: auto;
+            height: 300px;
+            background-color: #f9f9f9;
+        }
+        #inputArea {
+            display: flex;
+            width: 80%;
+            max-width: 600px;
+            margin-top: 10px;
+        }
+        #inputField {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #sendButton {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        #sendButton:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat with Study Chatbot</h1>
+    <div id="chat">
+        <!-- Messages will be displayed here -->
+    </div>
+    <div id="inputArea">
+        <input type="text" id="inputField" placeholder="Type your message here..." />
+        <button id="sendButton">Send</button>
+    </div>
+    <script>
+        const chat = document.getElementById('chat');
+        const inputField = document.getElementById('inputField');
+        const sendButton = document.getElementById('sendButton');
+
+        sendButton.addEventListener('click', () => {
+            const message = inputField.value;
+            if (message.trim() !== '') {
+                // Display message in chat
+                chat.innerHTML += `<div>${message}</div>`;
+                inputField.value = '';
+            }
+        });
+    </script>
+</body>
+</html>
