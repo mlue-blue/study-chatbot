@@ -3,38 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Chatbot - To-Do List</title>
+    <title>Study Chatbot - Advanced To-Do List</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>📝 Study Chatbot - To-Do List</h1>
+        <h1>📝 Advanced To-Do List</h1>
         
+        <!-- Add Task Form -->
         <div class="input-section">
-            <form id="taskForm" method="POST" action="/add">
+            <form method="POST" action="/add" class="add-task-form">
                 <input 
                     type="text" 
-                    id="taskInput" 
                     name="task" 
-                    placeholder="Add a new task (e.g., Make tea)" 
+                    placeholder="Add a new task..." 
                     required
+                    class="task-input"
                 >
-                <button type="submit">Add Task</button>
+                
+                <select name="priority" class="form-select">
+                    <option value="Low">Low Priority</option>
+                    <option value="Medium" selected>Medium Priority</option>
+                    <option value="High">High Priority</option>
+                </select>
+                
+                <select name="category" class="form-select">
+                    <option value="School">School</option>
+                    <option value="Work">Work</option>
+                    <option value="Personal">Personal</option>
+                    <option value="Other">Other</option>
+                </select>
+                
+                <input 
+                    type="date" 
+                    name="due_date" 
+                    class="form-select"
+                >
+                
+                <button type="submit" class="btn-add">Add Task</button>
             </form>
         </div>
 
+        <!-- Search & Filter Section -->
+        <div class="filter-section">
+            <form method="GET" action="/" class="filter-form">
+                <input 
+                    type="text" 
+                    name="search" 
+                    placeholder="🔍 Search tasks..." 
+                    value="{{ search }}"
+                    class="search-input"
+                >
+                
+                <select name="category" class="filter-select">
+                    <option value="">All Categories</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat }}" {% if category_filter == cat %}selected{% endif %}>{{ cat }}</option>
+                    {% endfor %}
+                </select>
+                
+                <select name="priority" class="filter-select">
+                    <option value="">All Priorities</option>
+                    {% for pri in priorities %}
+                    <option value="{{ pri }}" {% if priority_filter == pri %}selected{% endif %}>{{ pri }}</option>
+                    {% endfor %}
+                </select>
+                
+                <button type="submit" class="btn-filter">Filter</button>
+                <a href="/" class="btn-clear">Clear Filters</a>
+            </form>
+        </div>
+
+        <!-- Tasks List -->
         <div class="tasks-section">
-            <h2>Your Tasks:</h2>
-            <ul id="taskList" class="task-list">
-                {% for task in tasks %}
-                <li class="task-item">
-                    <span class="task-text">{{ task.task }}</span>
-                    <form method="POST" action="/delete/{{ loop.index0 }}" style="display:inline;">
-                        <button type="submit" class="delete-btn">Delete</button>
-                    </form>
-                </li>
-                {% endfor %}
-            </ul>
+            <h2>Your Tasks: ({{ filtered_tasks|length }})</h2>
+            
+            {% if filtered_tasks %}
+                <ul class="task-list">
+                    {% for task_id, task in filtered_tasks %}
+                    <li class="task-item {% if task.done %}completed{% endif %} priority-{{ task.get('priority', 'Medium').lower() }}">
+                        <div class="task-main">
+                            <form method="POST" action="/complete/{{ task_id }}" style="display:inline;">
+                                <input 
+                                    type="checkbox" 
+                                    class="task-checkbox"
+                                    {% if task.done %}checked{% endif %}
+                                    onchange="this.form.submit()"
+                                >
+                            </form>
+                            
+                            <div class="task-content">
+                                <span class="task-text">{{ task.task }}</span>
+                                <div class="task-meta">
+                                    {% if task.get('category') %}
+                                    <span class="badge category-badge">📁 {{ task.category }}</span>
+                                    {% endif %}
+                                    
+                                    {% if task.get('priority') %}
+                                    <span class="badge priority-badge priority-{{ task.priority.lower() }}">🎯 {{ task.priority }}</span>
+                                    {% endif %}
+                                    
+                                    {% if task.get('due_date') %}
+                                    <span class="badge date-badge">📅 {{ task.due_date }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="task-actions">
+                            <a href="/edit/{{ task_id }}" class="btn-edit">Edit</a>
+                            <form method="POST" action="/delete/{{ task_id }}" style="display:inline;">
+                                <button type="submit" class="btn-delete" onclick="return confirm('Delete this task?')">Delete</button>
+                            </form>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="no-tasks">No tasks yet. Add one to get started! 🚀</p>
+            {% endif %}
         </div>
     </div>
 
