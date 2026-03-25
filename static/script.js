@@ -1,16 +1,13 @@
-// This file handles client-side interactions
-// The form submission is handled by HTML form action
+// Script for enhanced to-do app
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ Script loaded successfully!');
-    console.log('Tasks will be saved to the server when you submit the form.');
+    console.log('✅ Advanced To-Do App Loaded!');
+    console.log('Features: Add, Edit, Delete, Complete, Search, Filter, Categories, Priorities, Due Dates');
 });
 
-// Optional: Add confirmation before delete
-document.querySelectorAll('form[action*="/delete/"]').forEach(form => {
-    form.addEventListener('submit', function(e) {
-        if (!confirm('Are you sure you want to delete this task?')) {
-            e.preventDefault();
-        }
+// Auto-submit filter form on select change
+document.querySelectorAll('.filter-select').forEach(select => {
+    select.addEventListener('change', function() {
+        this.closest('.filter-form').submit();
     });
 });
