@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Task</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>✏️ Edit Task</h1>
+        
+        <div class="edit-section">
+            <form method="POST" action="/edit/{{ task_id }}" class="edit-form">
+                <div class="form-group">
+                    <label for="task">Task Name:</label>
+                    <input 
+                        type="text" 
+                        id="task"
+                        name="task" 
+                        value="{{ task.task }}" 
+                        required
+                        class="task-input"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="priority">Priority:</label>
+                    <select id="priority" name="priority" class="form-select">
+                        {% for pri in priorities %}
+                        <option value="{{ pri }}" {% if task.get('priority') == pri %}selected{% endif %}>{{ pri }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="category">Category:</label>
+                    <select id="category" name="category" class="form-select">
+                        {% for cat in categories %}
+                        <option value="{{ cat }}" {% if task.get('category') == cat %}selected{% endif %}>{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="due_date">Due Date:</label>
+                    <input 
+                        type="date" 
+                        id="due_date"
+                        name="due_date" 
+                        value="{{ task.get('due_date', '') }}"
+                        class="form-select"
+                    >
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn-save">Save Changes</button>
+                    <a href="/" class="btn-cancel">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
