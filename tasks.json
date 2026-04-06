@@ -1,0 +1,23 @@
+[
+  {
+    "task": "I want to learn a new skill before this semester ends !",
+    "priority": "High",
+    "due_date": "2026-04-06",
+    "category": "Personal",
+    "done": false
+  },
+  {
+    "task": "I want to participate in a hackathon.  ",
+    "priority": "Medium",
+    "due_date": "2026-04-06",
+    "category": "School",
+    "done": false
+  },
+  {
+    "task": "I want to learn how to sing *",
+    "priority": "Low",
+    "due_date": "2026-04-06",
+    "category": "Personal",
+    "done": false
+  }
+]
