@@ -3,62 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Task</title>
+    <title>Edit Task - Mlue Manager</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1>✏️ Edit Task</h1>
-        
-        <div class="edit-section">
-            <form method="POST" action="/edit/{{ task_id }}" class="edit-form">
-                <div class="form-group">
-                    <label for="task">Task Name:</label>
-                    <input 
-                        type="text" 
-                        id="task"
-                        name="task" 
-                        value="{{ task.task }}" 
-                        required
-                        class="task-input"
-                    >
-                </div>
-                
-                <div class="form-group">
-                    <label for="priority">Priority:</label>
-                    <select id="priority" name="priority" class="form-select">
-                        {% for pri in priorities %}
-                        <option value="{{ pri }}" {% if task.get('priority') == pri %}selected{% endif %}>{{ pri }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="category">Category:</label>
-                    <select id="category" name="category" class="form-select">
-                        {% for cat in categories %}
-                        <option value="{{ cat }}" {% if task.get('category') == cat %}selected{% endif %}>{{ cat }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="due_date">Due Date:</label>
-                    <input 
-                        type="date" 
-                        id="due_date"
-                        name="due_date" 
-                        value="{{ task.get('due_date', '') }}"
-                        class="form-select"
-                    >
-                </div>
-                
-                <div class="form-actions">
-                    <button type="submit" class="btn-save">Save Changes</button>
-                    <a href="/" class="btn-cancel">Cancel</a>
-                </div>
-            </form>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <span>🌱</span>
+            <span>Mlue Manager</span>
         </div>
-    </div>
+        
+        <nav class="sidebar-nav">
+            <div class="nav-group">
+                <a href="/" class="nav-item">Back to All Tasks</a>
+            </div>
+
+            <div class="nav-group" style="margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                <div class="nav-title">Account</div>
+                <div style="padding: 0 8px 12px; font-size: 0.85rem; color: var(--text-primary); font-weight: 600;">
+                    Logged in as: <span style="color: var(--success-color);">{{ user.username }}</span>
+                </div>
+                <a href="/logout" class="nav-item" style="color: #b91c1c;">Logout</a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header">
+            <h1>Edit Task</h1>
+        </header>
+
+        <div class="tasks-container" style="display: flex; justify-content: center; align-items: flex-start;">
+            <div class="input-container" style="width: 100%; max-width: 600px; margin-top: 20px;">
+                <form method="POST" action="/edit/{{ task_id }}" class="add-task-form">
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Task Name</label>
+                        <input 
+                            type="text" 
+                            name="task" 
+                            value="{{ task.task }}" 
+                            required
+                            class="task-input"
+                            style="border-bottom: 1px solid var(--border-color); width: 100%;"
+                        >
+                    </div>
+                    
+                    <div class="form-options">
+                        <div class="selectors">
+                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-secondary);">PRIORITY</label>
+                                <select name="priority" class="form-select">
+                                    {% for pri in priorities %}
+                                    <option value="{{ pri }}" {% if task.get('priority') == pri %}selected{% endif %}>{{ pri }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-secondary);">CATEGORY</label>
+                                <select name="category" class="form-select">
+                                    {% for cat in categories %}
+                                    <option value="{{ cat }}" {% if task.get('category') == cat %}selected{% endif %}>{{ cat }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-secondary);">DUE DATE</label>
+                                <input type="date" name="due_date" value="{{ task.get('due_date', '') }}" class="form-select">
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; align-items: flex-end;">
+                            <a href="/" class="nav-item" style="margin: 0; padding: 8px 16px;">Cancel</a>
+                            <button type="submit" class="btn-add">Save Changes</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

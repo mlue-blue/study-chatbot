@@ -1,100 +1,36 @@
-import json
-import os
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
-class Task:
-    def __init__(self, name, priority='Medium', due_date='', category='Other', done=False):
-        self.name = name
-        self.priority = priority
-        self.due_date = due_date
-        self.category = category
-        self.done = done
+db = SQLAlchemy()
+
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128))
+    tasks = db.relationship('Task', backref='owner', lazy=True)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+class Task(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    priority = db.Column(db.String(20), default='Medium')
+    due_date = db.Column(db.String(50), default='')
+    category = db.Column(db.String(50), default='Other')
+    done = db.Column(db.Boolean, default=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def to_dict(self):
         return {
+            'id': self.id,
             'task': self.name,
             'priority': self.priority,
             'due_date': self.due_date,
             'category': self.category,
             'done': self.done
         }
-
-    @classmethod
-    def from_dict(cls, data):
-        return cls(
-            name=data.get('task', ''),
-            priority=data.get('priority', 'Medium'),
-            due_date=data.get('due_date', ''),
-            category=data.get('category', 'Other'),
-            done=data.get('done', False)
-        )
-
-    def __repr__(self):
-        return f"Task(name={self.name}, priority={self.priority}, done={self.done})"
-
-
-class TaskManager:
-    def __init__(self, storage_file='tasks.json'):
-        self.storage_file = storage_file
-        self.tasks = self.load_tasks()
-
-    def load_tasks(self):
-        if not os.path.exists(self.storage_file):
-            return []
-        try:
-            with open(self.storage_file, 'r') as f:
-                data = json.load(f)
-                return [Task.from_dict(t) for t in data]
-        except (json.JSONDecodeError, FileNotFoundError):
-            return []
-
-    def save_tasks(self):
-        with open(self.storage_file, 'w') as f:
-            json.dump([t.to_dict() for t in self.tasks], f, indent=2)
-
-    def add_task(self, name, priority='Medium', due_date='', category='Other'):
-        if not name:
-            return None
-        task = Task(name, priority, due_date, category)
-        self.tasks.append(task)
-        self.save_tasks()
-        return task
-
-    def delete_task(self, index):
-        if 0 <= index < len(self.tasks):
-            removed = self.tasks.pop(index)
-            self.save_tasks()
-            return removed
-        return None
-
-    def toggle_task(self, index):
-        if 0 <= index < len(self.tasks):
-            self.tasks[index].done = not self.tasks[index].done
-            self.save_tasks()
-            return self.tasks[index]
-        return None
-
-    def update_task(self, index, name=None, priority=None, due_date=None, category=None):
-        if 0 <= index < len(self.tasks):
-            task = self.tasks[index]
-            if name is not None: task.name = name
-            if priority is not None: task.priority = priority
-            if due_date is not None: task.due_date = due_date
-            if category is not None: task.category = category
-            self.save_tasks()
-            return task
-        return None
-
-    def get_filtered_tasks(self, search='', category='', priority=''):
-        filtered = []
-        for i, task in enumerate(self.tasks):
-            if search and search.lower() not in task.name.lower():
-                continue
-            if category and task.category != category:
-                continue
-            if priority and task.priority != priority:
-                continue
-            filtered.append((i, task.to_dict()))
-        return filtered
-
-    def get_all_dicts(self):
-        return [t.to_dict() for t in self.tasks]

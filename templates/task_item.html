@@ -1,0 +1,30 @@
+<li class="task-item new-task-animation {% if task.done %}completed{% endif %}" data-id="{{ task_id }}">
+    <form method="POST" action="/complete/{{ task_id }}">
+        <input 
+            type="checkbox" 
+            class="task-checkbox"
+            {% if task.done %}checked{% endif %}
+            onchange="this.form.submit()"
+        >
+    </form>
+    
+    <div class="task-details">
+        <span class="task-text">{{ task.task }}</span>
+        <div class="task-meta">
+            <span class="meta-item">🌿 {{ task.get('category', 'Other') }}</span>
+            <span class="meta-item priority-{{ task.get('priority', 'Medium').lower() }}">
+                ● {{ task.get('priority', 'Medium') }}
+            </span>
+            {% if task.get('due_date') %}
+            <span class="meta-item">🗓️ {{ task.due_date }}</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="task-actions">
+        <a href="/edit/{{ task_id }}" class="btn-edit">Edit</a>
+        <form method="POST" action="/delete/{{ task_id }}" style="display:inline;">
+            <button type="submit" class="btn-delete" onclick="return confirm('Delete this task?')">Delete</button>
+        </form>
+    </div>
+</li>

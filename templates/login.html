@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Mlue Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body style="justify-content: center; align-items: center; background-color: var(--bg-color); display: flex; height: 100vh;">
+    <div class="input-container" style="width: 100%; max-width: 400px; padding: 40px; border-radius: 32px;">
+        <div class="sidebar-header" style="justify-content: center; margin-bottom: 32px; padding: 0;">
+            <span>🌱</span>
+            <span>Mlue Manager</span>
+        </div>
+        
+        <h2 style="text-align: center; margin-bottom: 24px; color: var(--text-primary); font-weight: 700;">Welcome Back</h2>
+        
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div style="background: #fee2e2; color: #b91c1c; padding: 12px; border-radius: 12px; margin-bottom: 16px; font-size: 0.85rem; text-align: center;">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" class="add-task-form">
+            <div style="margin-bottom: 20px;">
+                <label style="font-size: 0.75rem; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; display: block; margin-bottom: 8px;">Username</label>
+                <input type="text" name="username" required class="task-input" placeholder="Enter your username" style="border-bottom: 1px solid var(--border-color); padding: 8px 0; margin-bottom: 0;">
+            </div>
+            <div style="margin-bottom: 32px;">
+                <label style="font-size: 0.75rem; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; display: block; margin-bottom: 8px;">Password</label>
+                <input type="password" name="password" required class="task-input" placeholder="••••••••" style="border-bottom: 1px solid var(--border-color); padding: 8px 0; margin-bottom: 0;">
+            </div>
+            
+            <button type="submit" class="btn-add" style="width: 100%; padding: 14px;">Sign In</button>
+        </form>
+        
+        <p style="text-align: center; margin-top: 24px; font-size: 0.9rem; color: var(--text-secondary);">
+            Don't have an account? <a href="{{ url_for('register') }}" style="color: var(--success-color); font-weight: 700; text-decoration: none;">Register</a>
+        </p>
+    </div>
+</body>
+</html>
